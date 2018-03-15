@@ -1,17 +1,11 @@
 package com.example.ronensabag.daggeractivitytestsample
 
-import android.app.Activity
-import android.app.Application
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
-import javax.inject.Inject
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 
-class MyApp : Application(), HasActivityInjector {
-  @Inject lateinit var dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-  override fun activityInjector() = dispatchingActivityInjector
+class MyApp : DaggerApplication() {
 
-  override fun onCreate() {
-    super.onCreate()
-    DaggerAppComponent.builder().application(this).build().inject(this)
-  }
+  override fun applicationInjector(): AndroidInjector<out DaggerApplication> =
+    DaggerAppComponent.builder().application(this).build();
+
 }

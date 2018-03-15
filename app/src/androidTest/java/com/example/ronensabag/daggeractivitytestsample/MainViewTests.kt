@@ -12,6 +12,7 @@ import dagger.android.AndroidInjector
 import dagger.android.AndroidInjector.Factory
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.DispatchingAndroidInjector_Factory
+import dagger.android.dispatchingActivityInjector
 
 import org.junit.Test
 import org.junit.runner.RunWith
