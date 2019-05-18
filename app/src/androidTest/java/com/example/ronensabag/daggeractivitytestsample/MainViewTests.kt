@@ -1,13 +1,13 @@
 package com.example.ronensabag.daggeractivitytestsample
 
 import android.app.Activity
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
 import dagger.android.AndroidInjector
 import dagger.android.AndroidInjector.Factory
 import dagger.android.DispatchingAndroidInjector
@@ -58,15 +58,15 @@ inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block :
     }
   }
   val fragmentFactory = AndroidInjector.Factory<Fragment> { fragmentInjector }
-  val fragmentMap = mapOf(Pair<Class <out Fragment>, Provider<Factory<out Fragment>>>(F::class.java, Provider { fragmentFactory }))
+  val fragmentMap = mapOf(Pair<Class <*>, Provider<Factory<*>>>(F::class.java, Provider { fragmentFactory }))
   val activityInjector = AndroidInjector<Activity> { activity ->
     originalDispatchingActivityInjector.inject(activity)
     if (activity is MainActivity) {
       originalFragmentInjector = activity.fragmentInjector
-      activity.fragmentInjector = DispatchingAndroidInjector_Factory.newDispatchingAndroidInjector(fragmentMap)
+      activity.fragmentInjector = DispatchingAndroidInjector_Factory.newInstance(fragmentMap, emptyMap())
     }
   }
   val activityFactory = AndroidInjector.Factory<Activity> { activityInjector }
-  val activityMap = mapOf(Pair<Class <out Activity>, Provider<Factory<out Activity>>>(MainActivity::class.java, Provider { activityFactory }))
-  return DispatchingAndroidInjector_Factory.newDispatchingAndroidInjector(activityMap)
+  val activityMap = mapOf(Pair<Class <*>, Provider<Factory<*>>>(MainActivity::class.java, Provider { activityFactory }))
+  return DispatchingAndroidInjector_Factory.newInstance(activityMap, emptyMap())
 }

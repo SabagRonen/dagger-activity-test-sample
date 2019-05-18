@@ -1,12 +1,13 @@
 package com.example.ronensabag.daggeractivitytestsample
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.toolbar
 
 import javax.inject.Inject
 
@@ -21,6 +22,6 @@ class MainActivity : AppCompatActivity(), HasSupportFragmentInjector {
     AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    setSupportActionBar(toolbar)
+    setSupportActionBar(toolbar as Toolbar)
   }
 }
