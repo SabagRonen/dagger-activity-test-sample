@@ -1,7 +1,7 @@
 package com.example.ronensabag.daggeractivitytestsample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.ronensabag.daggeractivitytestsample.MainContract.View
 import dagger.android.AndroidInjection
 

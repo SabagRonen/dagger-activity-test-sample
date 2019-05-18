@@ -1,9 +1,9 @@
 package com.example.ronensabag.daggeractivitytestsample;
 
 import android.app.Activity;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.DispatchingAndroidInjector_Factory;
@@ -14,9 +14,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -56,14 +56,15 @@ public class MainViewJavaTests {
       }
     };
 
-    Map<Class<? extends Activity>, Provider<AndroidInjector.Factory<? extends Activity>>> map = new HashMap<>(1);
-    Provider<AndroidInjector.Factory<? extends Activity>> provider = new Provider<AndroidInjector.Factory<? extends Activity>>() {
+    Map<Class<?>, Provider<AndroidInjector.Factory<?>>> map = new HashMap<>(1);
+    HashMap<Class<?>, Provider<AndroidInjector.Factory<?>>> injectorFactoriesWithClassKeys = new HashMap<>();
+    Provider<AndroidInjector.Factory<?>> provider = new Provider<AndroidInjector.Factory<?>>() {
 
       @Override public AndroidInjector.Factory<? extends Activity> get() {
         return factory;
       }
     };
     map.put(MainActivity.class, provider);
-    return DispatchingAndroidInjector_Factory.newDispatchingAndroidInjector(map);
+    return DispatchingAndroidInjector_Factory.newInstance(map, new HashMap<String, Provider<AndroidInjector.Factory<?>>>());
   }
 }

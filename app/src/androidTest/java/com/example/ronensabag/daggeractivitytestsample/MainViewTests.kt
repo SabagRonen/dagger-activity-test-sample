@@ -1,12 +1,11 @@
 package com.example.ronensabag.daggeractivitytestsample
 
 import android.app.Activity
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.ActivityTestRule
 import dagger.android.AndroidInjector
 import dagger.android.AndroidInjector.Factory
 import dagger.android.DispatchingAndroidInjector
@@ -18,9 +17,10 @@ import org.junit.runner.RunWith
 import org.junit.Rule
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+
 import javax.inject.Provider
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
 class MainViewTests {
   val mockUserAction = mock(MainContract.UserAction::class.java)
 
@@ -51,6 +51,6 @@ inline fun <reified T : Activity> createFakeActivityInjector(crossinline block :
     }
   }
   val factory = AndroidInjector.Factory<Activity> { injector }
-  val map = mapOf(Pair<Class <out Activity>, Provider<Factory<out Activity>>>(T::class.java, Provider { factory }))
-  return DispatchingAndroidInjector_Factory.newDispatchingAndroidInjector(map)
+  val map = mapOf(Pair<Class <*>, Provider<Factory<*>>>(T::class.java, Provider { factory }))
+  return DispatchingAndroidInjector_Factory.newInstance(map, emptyMap())
 }
