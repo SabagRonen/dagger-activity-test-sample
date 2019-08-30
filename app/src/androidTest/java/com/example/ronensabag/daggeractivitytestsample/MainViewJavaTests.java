@@ -1,6 +1,7 @@
 package com.example.ronensabag.daggeractivitytestsample;
 
 import android.app.Activity;
+
 import androidx.test.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -25,7 +26,7 @@ public class MainViewJavaTests {
   @Rule public ActivityTestRule mActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
     @Override protected void beforeActivityLaunched() {
       super.beforeActivityLaunched();
-      MyApp myApp = (MyApp)InstrumentationRegistry.getTargetContext().getApplicationContext();
+      MyApp myApp = (MyApp) InstrumentationRegistry.getTargetContext().getApplicationContext();
       myApp.setDispatchingActivityInjector(createFakeActivityInjector());
     }
   };
@@ -39,7 +40,7 @@ public class MainViewJavaTests {
     verify(mockUserAction).createTopic((MainActivity)mActivityTestRule.getActivity());
   }
 
-  private DispatchingAndroidInjector<Activity> createFakeActivityInjector() {
+  private DispatchingAndroidInjector<Object> createFakeActivityInjector() {
     final AndroidInjector<Activity> injector = new AndroidInjector<Activity>() {
       @Override public void inject(Activity instance) {
         if (instance instanceof MainActivity) {
