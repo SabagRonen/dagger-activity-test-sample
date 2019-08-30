@@ -1,7 +1,5 @@
 package dagger.android
 
-import android.app.Activity
-
-var DaggerApplication.dispatchingActivityInjector: DispatchingAndroidInjector<Activity>
-  get() = this.activityInjector()
-  set(value) {activityInjector = value}
+var DaggerApplication.dispatchingActivityInjector: DispatchingAndroidInjector<Any>
+  get() = this.androidInjector
+  set(value) {androidInjector = value}

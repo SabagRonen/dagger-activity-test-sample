@@ -2,11 +2,11 @@ package com.example.ronensabag.daggeractivitytestsample
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import dagger.android.AndroidInjector
 import dagger.android.AndroidInjector.Factory
@@ -24,13 +24,13 @@ import javax.inject.Provider
 
 @RunWith(AndroidJUnit4::class)
 class MainViewTests {
-  val mockUserAction = mock(MainContract.UserAction::class.java)
+  val mockUserAction: MainContract.UserAction = mock(MainContract.UserAction::class.java)
 
   @get:Rule
   val activityTestRule = object : ActivityTestRule<MainActivity>(MainActivity::class.java, true, true) {
     override fun beforeActivityLaunched() {
       super.beforeActivityLaunched()
-      val myApp = InstrumentationRegistry.getTargetContext().applicationContext as MyApp
+      val myApp = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApp
       myApp.dispatchingActivityInjector = createFakeFragmentInjector<MainFragment> {
         userAction = mockUserAction
       }
@@ -48,26 +48,26 @@ class MainViewTests {
 }
 
 inline fun <reified F : Fragment> createFakeFragmentInjector(crossinline block : F.() -> Unit)
-    : DispatchingAndroidInjector<Activity> {
-  val myApp = InstrumentationRegistry.getTargetContext().applicationContext as MyApp
+    : DispatchingAndroidInjector<Any> {
+  val myApp = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApp
   val originalDispatchingActivityInjector = myApp.dispatchingActivityInjector
-  var originalFragmentInjector: AndroidInjector<Fragment>? = null
+  var originalFragmentInjector: AndroidInjector<Any>? = null
   val fragmentInjector = AndroidInjector<Fragment> { fragment ->
     originalFragmentInjector?.inject(fragment)
     if (fragment is F) {
       fragment.block()
     }
   }
-  val fragmentFactory = AndroidInjector.Factory<Fragment> { fragmentInjector }
+  val fragmentFactory = Factory<Fragment> { fragmentInjector }
   val fragmentMap = mapOf(Pair<Class <*>, Provider<Factory<*>>>(F::class.java, Provider { fragmentFactory }))
   val activityInjector = AndroidInjector<Activity> { activity ->
     originalDispatchingActivityInjector.inject(activity)
     if (activity is MainActivity) {
-      originalFragmentInjector = activity.fragmentInjector
+      originalFragmentInjector = activity.androidInjector()
       activity.fragmentInjector = DispatchingAndroidInjector_Factory.newInstance(fragmentMap, emptyMap())
     }
   }
-  val activityFactory = AndroidInjector.Factory<Activity> { activityInjector }
+  val activityFactory = Factory<Activity> { activityInjector }
   val activityMap = mapOf(Pair<Class <*>, Provider<Factory<*>>>(MainActivity::class.java, Provider { activityFactory }))
   return DispatchingAndroidInjector_Factory.newInstance(activityMap, emptyMap())
 }
